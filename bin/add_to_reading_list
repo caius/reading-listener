@@ -1,8 +1,11 @@
 #!/usr/bin/env osascript
 
 -- Pass URL to save as first argument to script
+-- Optionally pass second argument to specify title
 on run argv
-	if (count of argv) > 0
+	if (count of argv) is 1
 		tell app "Safari" to add reading list item (item 1 of argv as text)
+	else if (count of argv) is 2
+		tell app "Safari" to add reading list item (item 1 of argv as text) with title (item 2 of argv as text)
 	end if
 end run
