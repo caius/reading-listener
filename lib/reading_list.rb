@@ -1,4 +1,5 @@
 require "date"
+require "json"
 
 def Date(obj)
   Date.parse(obj)
@@ -50,6 +51,17 @@ class ReadingList
       @uuid ||= data["WebBookmarkUUID"]
     end
 
+  end
+
+  ItemPresenter = Struct.new(:item) do
+    def to_json(*args)
+      {
+        :date_added => item.date_added,
+        :title => item.title,
+        :url => item.url,
+        :uuid => item.uuid,
+      }.to_json(*args)
+    end
   end
 end
 
