@@ -10,11 +10,4 @@ data = CFPropertyList.native_types(plist.value)
 
 reading_list = ReadingList.from_bookmarks_list(data)
 
-reading_list.items.each do |item|
-  p item.date_added
-  p item.preview
-  p item.title
-  p item.url
-  p item.uuid
-  puts;puts
-end
+puts reading_list.items.map { |item| ReadingList::ItemPresenter.new(item).to_json }
