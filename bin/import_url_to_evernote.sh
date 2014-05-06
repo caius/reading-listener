@@ -2,6 +2,11 @@
 
 url="${1}"
 
+if [[ -z $url ]]; then
+  echo "USAGE: $0 URL"
+  exit 1
+fi
+
 osascript <<APPLESCRIPT
 tell application "Evernote"
   set NotebookName to "Reading List Archive"
