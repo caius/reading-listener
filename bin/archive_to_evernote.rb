@@ -35,7 +35,7 @@ def notes_for(url)
     :includeNotebookGuid => true,
   )
 
-  NOTE_STORE.findNotesMetadata(token, query, 0, 1, result_spec).totalNotes
+  note_store.findNotesMetadata(token, query, 0, 1, result_spec).totalNotes
 end
 
 def token
