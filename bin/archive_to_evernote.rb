@@ -8,7 +8,7 @@ end
 
 require "evernote_oauth"
 
-NOTEBOOK_NAME = "Archive".downcase
+NOTEBOOK_NAME = "Reading List Archive".downcase.freeze
 
 def create_note_for(url)
   note = Evernote::EDAM::Type::Note.new(
@@ -43,7 +43,8 @@ TOKEN = File.read(File.join(ENV["HOME"], ".evernote-token")).strip
 
 # Set up the NoteStore client
 client = EvernoteOAuth::Client.new(
-token: TOKEN,
+  token: TOKEN,
+  sandbox: false,
 )
 NOTE_STORE = client.note_store
 
@@ -56,5 +57,10 @@ end
 NOTEBOOK_GUID = NOTEBOOK.guid
 
 URLS.each do |url|
-  create_note_for(url) if notes_for(url).zero?
+  if notes_for(url).zero?
+    create_note_for(url)
+    puts "[ADDED] #{url.inspect}"
+  else
+    puts "[DUPLICATE] #{url.inspect}"
+  end
 end
