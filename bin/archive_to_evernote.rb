@@ -20,7 +20,7 @@ def create_note_for(url)
       :sourceURL => url,
     ),
   )
-  NOTE_STORE.createNote(TOKEN, note)
+  note_store.createNote(token, note)
 end
 
 def notes_for(url)
