@@ -8,6 +8,14 @@ require "time"
 
 SAVE_COMMAND = File.expand_path("add_to_reading_list", File.dirname(__FILE__)).freeze
 
+# Only output if -v or --version is passed
+if ARGV.find { |arg| %w(-v --version).include?(arg) }
+  $output = $stdout
+else
+  $output = File.open("/dev/null", "w")
+  at_exit { $output.close }
+end
+
 def save_to_reading_list(url, title=nil)
   system SAVE_COMMAND, *[url, title].compact
 end
@@ -61,7 +69,7 @@ pocket_items = RestClient.post("https://getpocket.com/v3/get", params.merge(auth
 end.map {|i| PocketItem.new(i) }
 
 if pocket_items.empty?
-  puts "Nothing received to copy"
+  $output.puts "Nothing received to copy"
   exit(0)
 end
 
@@ -69,7 +77,7 @@ items_to_archive = []
 
 pocket_items.each do |item|
   if item.url.nil?
-    puts "!!!ERROR!!! url is nil: #{item.inspect}"
+    $output.puts "!!!ERROR!!! url is nil: #{item.inspect}"
     next
   end
   p [item.url, item.title]
@@ -77,10 +85,10 @@ pocket_items.each do |item|
   items_to_archive << item
 end
 
-puts ">> Added #{items_to_archive.size} items to Reading List"
+$output.puts ">> Added #{items_to_archive.size} items to Reading List"
 
 if items_to_archive.empty?
-  puts "Nothing to archive"
+  $output.puts "Nothing to archive"
   exit(0)
 end
 
@@ -106,4 +114,4 @@ msg = if archived
 else
   "ERR: failed to archive copied items successfully"
 end
-puts msg
+$output.puts msg
